@@ -1,0 +1,6 @@
+.venv/
+Guide.md
+__pycache__/
+index_store/
+*.pyc
+*.pkl
