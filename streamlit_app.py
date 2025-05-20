@@ -3,13 +3,18 @@ from langchain.chains import RetrievalQA
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
+from langchain_community.vectorstores import FAISS
 
 # Initialize only once
 @st.cache_resource
 def load_qa_chain():
-
     embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    vectorstore = Chroma(persist_directory="index_store", embedding_function=embedding)
+    
+    vectorstore = FAISS.load_local(
+        "index_store",
+        embedding,
+        allow_dangerous_deserialization=True  # <--- add this!
+    )
     retriever = vectorstore.as_retriever()
     llm = ChatOpenAI(model="gpt-4", openai_api_key=st.secrets["OPENAI_API_KEY"])
     qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
