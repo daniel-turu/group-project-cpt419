@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 import os
 # Import the embedder
-from app import embed_data  # Make sure embed_data.py is in the same folder or adjust the path
+from app.embed_data import embed_and_store  # Make sure embed_data.py is in the same folder or adjust the path
 
 # Initialize only once
 @st.cache_resource
@@ -60,7 +60,7 @@ You can use this tool to ask questions about:
 # === 📌 Add this: Automatically generate index if missing ===
 if not os.path.exists("index_store") or not os.path.exists("index_store/index.faiss"):
     with st.spinner("Generating index from handbook data..."):
-        embed_data()
+        embed_and_store()
         st.success("Index generated successfully!")
 
 
