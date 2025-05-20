@@ -1,3 +1,4 @@
+import utils.session
 from langchain.text_splitter import MarkdownTextSplitter
 from langchain.schema import Document
 import os
