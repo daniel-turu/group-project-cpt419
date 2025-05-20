@@ -4,6 +4,9 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import FAISS
+import os
+# Import the embedder
+from app import embed_data  # Make sure embed_data.py is in the same folder or adjust the path
 
 # Initialize only once
 @st.cache_resource
@@ -53,10 +56,19 @@ You can use this tool to ask questions about:
 - Departmental rules and expectations
 """)
 
+
+# === 📌 Add this: Automatically generate index if missing ===
+if not os.path.exists("index_store") or not os.path.exists("index_store/index.faiss"):
+    with st.spinner("Generating index from handbook data..."):
+        embed_data()
+        st.success("Index generated successfully!")
+
+
+
 # Load QA bot
 qa = load_qa_chain()
 
-# User interaction
+# === 💬 User interaction ===
 user_question = st.text_input("💬 Ask a question about the handbook:")
 
 # Output response
